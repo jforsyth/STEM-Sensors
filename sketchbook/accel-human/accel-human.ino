@@ -44,7 +44,7 @@ ADXL313 myAdxl;
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.println("Example 1 - Reading values from ADXL313");
 
   Wire.begin();

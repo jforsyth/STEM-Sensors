@@ -43,6 +43,8 @@ void loop()
 {
   // Use the uva, uvb, and index functions to read calibrated UVA and UVB values and a
   // calculated UV index value between 0-11.
+  Serial.print(millis());
+  Serial.print(",");
   Serial.println(String(uv.uva()) + ", " + String(uv.uvb()) + ", " + String(uv.index()));
   delay(250);
 }

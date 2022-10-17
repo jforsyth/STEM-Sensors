@@ -65,6 +65,8 @@ void loop()
   if(myAdxl.dataReady()) // check data ready interrupt, note, this clears all other int bits in INT_SOURCE reg
   {
     myAdxl.readAccel(); // read all 3 axis, they are stored in class variables: myAdxl.x, myAdxl.y and myAdxl.z
+    Serial.print(millis());
+    Serial.print(",");
     Serial.print(myAdxl.x);
     Serial.print(",");
     Serial.print(myAdxl.y);

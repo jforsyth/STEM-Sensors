@@ -125,12 +125,24 @@ void loop()
   static char     buf[16];                                                          // Text buffer for sprintf
   static float    alt;                                                              // temp variable for altitude
   static uint16_t loopCounter = 0;                                                  // Display iterations
-  if (loopCounter % 25 == 0)                                                        // Display header every 25 loops
+  if (loopCounter % 10 == 0)                                                        // Display header every 25 loops
   { //
-    Serial.print(F("\nLoop Temp\xC2\xB0\x43 Humid% Press hPa   Alt m Air m"));      // Show header plus unicode "�C"
-    Serial.print(F("\xE2\x84\xA6\n==== ====== ====== ========= ======= ======\n")); // and "?" symbols
+    Serial.print(F("\nTime\tTemp\xC2\xB0\x43\tHumid%\tPress(hPa)\tAlt (m)\n"));      // Show header plus unicode "�C"
+    Serial.print(F("====\t======\t======\t=========\t=======\n")); // and "?" symbols
   } // if-then time to show headers                                                 //
   BME680.getSensorData(temp, humidity, pressure, gas);                              // Get the most recent readings
+  alt = altitude(pressure); 
+
+  Serial.print(millis()); Serial.print("\t");
+  Serial.print((float)temp/100.0); Serial.print("\t");
+  Serial.print((float)humidity/1000.0); Serial.print("\t");
+  Serial.print((float)pressure/100.0); Serial.print("\t\t");
+  Serial.println(alt);
+  //Serial.println((float)gas/100.0);
+
+  loopCounter++;
+  delay(1000);
+  /*
   sprintf(buf, "%4d %3d.%02d", ++loopCounter % 9999,                                // Clamp iterations to 9999,
           (int8_t)(temp / 100), (uint8_t)(temp % 100));                             // Temperature in decidegrees
   Serial.print(buf);                                                                //
@@ -143,5 +155,5 @@ void loop()
   Serial.print(buf);                                                                //
   sprintf(buf, "%4d.%02d\n", (int16_t)(gas / 100), (uint8_t)(gas % 100));           // Resistance in milliohms
   Serial.print(buf);                                                                //
-  delay(10000);                                                                     // Wait 10s before repeating
+  delay(1000);                                                                     // Wait 1s before repeating*/
 } // of method loop()

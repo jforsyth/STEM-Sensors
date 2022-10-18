@@ -1,4 +1,3 @@
-
 /******************************************************************************
   Example1_BasicReadings.ino
   Read values of x/y/z axis of the ADXL313 (via I2C), print them to terminal.
@@ -43,9 +42,12 @@
 #include <SparkFunADXL313.h> //Click here to get the library: http://librarymanager/All#SparkFun_ADXL313
 ADXL313 myAdxl;
 
+float accel_range = -1;
+
 void setup()
 {
   Serial.begin(9600);
+  Serial.println("Example 1 - Reading values from ADXL313");
 
   Wire.begin();
 
@@ -54,10 +56,13 @@ void setup()
     Serial.println("The sensor did not respond. Please check wiring.");
     while(1); //Freeze
   }
+  Serial.print("Sensor is connected properly.");
 
   myAdxl.setRange(ADXL313_RANGE_4_G);
   
   myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
+
+  accel_range = 4;
 }
 
 void loop()
@@ -65,14 +70,20 @@ void loop()
   if(myAdxl.dataReady()) // check data ready interrupt, note, this clears all other int bits in INT_SOURCE reg
   {
     myAdxl.readAccel(); // read all 3 axis, they are stored in class variables: myAdxl.x, myAdxl.y and myAdxl.z
-    Serial.print(millis());
+
+    int x_accel = myAdxl.x;
+    int y_accel = myAdxl.y;
+    int z_accel = myAdxl.z;
+
+    float x_gs=(float)x_accel/512.0 * accel_range;
+    float y_gs=(float)y_accel/512.0 * accel_range;
+    float z_gs=(float)z_accel/512.0 * accel_range;
+    
+    Serial.print(x_gs);
     Serial.print(",");
-    Serial.print(myAdxl.x);
+    Serial.print(y_gs);
     Serial.print(",");
-    Serial.print(myAdxl.y);
-    Serial.print(",");
-    Serial.print(myAdxl.z);
-    Serial.println();
+    Serial.println(z_gs);
   }
   else
   {

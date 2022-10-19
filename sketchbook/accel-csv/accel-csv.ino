@@ -79,6 +79,8 @@ void loop()
     float y_gs=(float)y_accel/512.0 * accel_range;
     float z_gs=(float)z_accel/512.0 * accel_range;
     
+    Serial.print(millis());
+    Serial.print(",");
     Serial.print(x_gs);
     Serial.print(",");
     Serial.print(y_gs);

@@ -138,7 +138,7 @@ import serial
 from serial.tools.list_ports import comports
 
 
-def map(value, input_low, input_high, output_low, output_high):
+def scale(value, input_low, input_high, output_low, output_high):
     if value < input_low:
         value = input_high
 
@@ -198,7 +198,7 @@ while abs(start_time - time()) < duration:
     y_accel = float(values[5])
     z_accel = float(values[6])
 
-    accel_freq = map(x_accel, -2, 2, 300, 700)
+    accel_freq = scale(x_accel, -2, 2, 300, 700)
 
     # new_notes = freq_to_note(temp * 15)
     new_notes = freq_to_note(accel_freq)

@@ -65,8 +65,6 @@ void setup() {
     Serial.println("The sensor did not respond. Please check wiring.");
     while (1); //Freeze
   }
-  Serial.print("Sensor is connected properly.");
-
   myAdxl.setRange(ADXL313_RANGE_4_G);
 
   myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode

@@ -227,11 +227,11 @@ while abs(start_time - time()) < duration:
     """
 
     # scale the sensor data to appropriate values
-    sensor_data_as_frequency = scale(value=x_accel, input_low=-2, input_high=2, output_low=300, output_high=700)
+    accel_data_as_frequency = scale(value=x_accel, input_low=-2, input_high=2, output_low=300, output_high=700)
 
     # use the built-in freq_to_note method to convert from a frequency (Hertz)
     # to a note (Note, Octave)
-    note_to_play = freq_to_note(sensor_data_as_frequency)
+    accel_notes = freq_to_note(accel_data_as_frequency)
 
     """
     Step 3: The sensor data has not been converted into notes that the musicpy library can understand. 
@@ -239,4 +239,4 @@ while abs(start_time - time()) < duration:
     """
 
     # play the notes with a selected instrument
-    play(note_to_play, wait=False, instrument='Marimba')
+    play(accel_notes, wait=False, instrument='Marimba')

@@ -73,7 +73,7 @@ void setup() {
 
 }
 
-const int loop_delay = 250;
+const int loop_delay = 200;
 void loop() {
 
   /**

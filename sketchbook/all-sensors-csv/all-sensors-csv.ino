@@ -34,14 +34,18 @@ void setup() {
   // It will return true on success or false on failure to communicate
   if (uv.begin() == false)
   {
-    Serial.println("Unable to communicate with VEML6075.");
+
     while (1)
-      ;
+    {
+      Serial.println("Unable to communicate with VEML6075. Check wiring.");
+      delay(5000);
+
+    }
   }
 
   while (!BME680.begin(I2C_STANDARD_MODE)) // Start BME680 using I2C protocol
   {
-    Serial.print(F("-  Unable to find BME680. Trying again in 5 seconds.\n"));
+    Serial.print(F("-  Unable to find BME680. Trying again in 5 seconds. Please check wiring.\n"));
     delay(5000);
   } // of loop until device is located
   //Serial.print(F("- Setting 16x oversampling for all sensors\n"));

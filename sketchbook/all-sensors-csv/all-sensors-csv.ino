@@ -23,7 +23,10 @@ float altitude(const int32_t press, const float seaLevel)
   return (Altitude);
 } // of method altitude()
 
+#include <SparkFunADXL313.h> //Click here to get the library: http://librarymanager/All#SparkFun_ADXL313
+ADXL313 myAdxl;
 
+float accel_range = -1;
 void setup() {
 
   Serial.begin(9600);
@@ -56,6 +59,19 @@ void setup() {
   BME680.setIIRFilter(IIR4); // Use enumerated type values
   //Serial.print(F("- Setting gas measurement to 320\xC2\xB0\x43 for 150ms\n")); // "�C" symbols
   BME680.setGas(320, 150); // 320�c for 150 milliseconds
+
+  if (myAdxl.begin() == false) //Begin communication over I2C
+  {
+    Serial.println("The sensor did not respond. Please check wiring.");
+    while (1); //Freeze
+  }
+  Serial.print("Sensor is connected properly.");
+
+  myAdxl.setRange(ADXL313_RANGE_4_G);
+
+  myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
+
+  accel_range = 4;
 
 }
 
@@ -90,6 +106,25 @@ void loop() {
   float humidity = _humidity / 1000.0;
   float pressure = _pressure / 100.0;
 
+  /**
+     Get Acceleration data
+  */
+
+  static float xAccel = 0;
+  static float yAccel = 0;
+  static float zAccel = 0;
+  if (myAdxl.dataReady()) // check data ready interrupt, note, this clears all other int bits in INT_SOURCE reg
+  {
+    myAdxl.readAccel(); // read all 3 axis, they are stored in class variables: myAdxl.x, myAdxl.y and myAdxl.z
+
+    int x_accel = myAdxl.x;
+    int y_accel = myAdxl.y;
+    int z_accel = myAdxl.z;
+
+    xAccel = (float)x_accel / 512.0 * accel_range;
+    yAccel = (float)y_accel / 512.0 * accel_range;
+    zAccel = (float)z_accel / 512.0 * accel_range;
+  }
 
   /**
      Print all data as CSV
@@ -97,9 +132,9 @@ void loop() {
   Serial.print(temp); Serial.print(",");
   Serial.print(humidity); Serial.print(",");
   Serial.print(pressure); Serial.print(",");
-  Serial.println(UV_Index); //Serial.print(",");
-  //Serial.print(xAccel); Serial.print(",");
-  //Serial.print(yAccel); Serial.print(",");
-  //Serial.println(zAccel);
+  Serial.print(UV_Index); Serial.print(",");
+  Serial.print(xAccel); Serial.print(",");
+  Serial.print(yAccel); Serial.print(",");
+  Serial.println(zAccel);
   delay(loop_delay);
 }

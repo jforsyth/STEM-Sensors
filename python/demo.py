@@ -165,7 +165,7 @@ portName = '/dev/cu.usbserial-110'
 # portName = 'COM3'
 
 # do not change this parameter
-baudRate = 9600
+baudRate = 57600
 
 # attempt to open port
 try:

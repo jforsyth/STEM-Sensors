@@ -29,7 +29,7 @@ ADXL313 myAdxl;
 float accel_range = -1;
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(57600);
 
   Wire.begin();
 

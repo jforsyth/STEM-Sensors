@@ -161,7 +161,7 @@ Step 1: Determine which Serial/USB port is in use. This will vary between Window
 If the port cannot be found then an error message will appear listing the various ports available. Keep 
 adjusting the variable portName until the correct one is found.
 """
-portName = '/dev/cu.usbserial-110'
+portName = '/dev/cu.usbserial-10'
 # portName = 'COM3'
 
 # do not change this parameter
@@ -192,7 +192,7 @@ start_time = time()
 
 # set duration for the loop
 duration = 10
-
+counter = 0;
 # run this loop for duration seconds
 while abs(start_time - time()) < duration:
 
@@ -215,6 +215,13 @@ while abs(start_time - time()) < duration:
     y_accel = float(values[5])
     z_accel = float(values[6])
 
+    if counter % 10 == 0:
+        print("Temp\tHumid\tPressure\tUV\t\tX\t\tY\t\tZ")
+
+    print(str(temp) + "\t" + str(humidity) + "\t" + str(pressure) + "\t\t" + str(uv) + "\t"
+          + str(x_accel) + "\t" + str(y_accel) + "\t" + str(z_accel))
+
+    counter += 1
     """
     Step 2: All data from the sensor board has been read in. Only one sensor can be "played" at a time.
     In the section below use the scale() method, or develop your own equation, to map the sensor data range

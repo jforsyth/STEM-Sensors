@@ -129,16 +129,24 @@
 #     'Gunshot': 128
 # }
 
+# include all the relevant libraries
 from time import time
-
 from musicpy.musicpy import play, freq_to_note
-from musicpy.structures import note
-
 import serial
 from serial.tools.list_ports import comports
 
 
 def scale(value, input_low, input_high, output_low, output_high):
+    """
+    A custom method to scale 'value' from one input range into another. Input value is restricted to the
+    intput value range. Output is also restricted to output range. Scale is linear
+    :param value: Value to be scaled
+    :param input_low: Low bound for input domain
+    :param input_high: Upper bound for output domain
+    :param output_low: Low bound for output range
+    :param output_high: Upper bound for output range
+    :return: Result of scaling operation
+    """
     if value < input_low:
         value = input_high
 
@@ -148,9 +156,15 @@ def scale(value, input_low, input_high, output_low, output_high):
     return (value - input_low) / (input_high - input_low) * (output_high - output_low) + output_low
 
 
-# set parameters for serial port
-portName = '/dev/cu.usbserial-10'
+"""
+Step 1: Determine which Serial/USB port is in use. This will vary between Windows, Mac, and Linux systems.
+If the port cannot be found then an error message will appear listing the various ports available. Keep 
+adjusting the variable portName until the correct one is found.
+"""
+portName = '/dev/cu.usbserial-110'
 # portName = 'COM3'
+
+# do not change this parameter
 baudRate = 9600
 
 # attempt to open port
@@ -160,7 +174,7 @@ try:
 
 # if fail, print a helpful message
 except:
-    print("Couldn't open port. Try changing portName to one of the options below:")
+    print("Couldn't open port. Try changing portName variable to one of the options below:")
     ports_list = comports()
     for port_candidate in ports_list:
         print(port_candidate.device)
@@ -181,15 +195,18 @@ duration = 10
 
 # run this loop for duration seconds
 while abs(start_time - time()) < duration:
-    # wait until we have an '!' from the Arduino
+
+    # wait until we have a line from the Arduino
     bytes = ser.readline()
 
+    # decode the bytes into a string. Remove all whitespace
     received = bytes.decode('utf-8')
     received = received.replace('\r', '').replace('\n', '')
 
+    # split the string based upon commas
     values = received.split(",")
 
-    # capture all sensor data
+    # extra sensor data from each field of the CSV line
     temp = float(values[0])
     humidity = float(values[1])
     pressure = float(values[2])
@@ -198,14 +215,28 @@ while abs(start_time - time()) < duration:
     y_accel = float(values[5])
     z_accel = float(values[6])
 
-    accel_freq = scale(x_accel, -2, 2, 300, 700)
+    """
+    Step 2: All data from the sensor board has been read in. Only one sensor can be "played" at a time.
+    In the section below use the scale() method, or develop your own equation, to map the sensor data range
+    into a musical range. For example: UV may range from 0 to 10. This can be mapped into a reasonable musical 
+    range of 300 - 700 Hz.
+    
+    Adjust the value= parameter to select different sensors.
+    Adjust the input_low and input_high parameters to correspond to reasonable upper and lower bounds for the sensor
+    Adjust the output_low and output_high parameter to map to suitable frequencies. The human hearing range is ~20Hz to 20,000 Hz
+    """
 
-    # new_notes = freq_to_note(temp * 15)
-    new_notes = freq_to_note(accel_freq)
+    # scale the sensor data to appropriate values
+    sensor_data_as_frequency = scale(value=x_accel, input_low=-2, input_high=2, output_low=300, output_high=700)
 
-    print(temp, new_notes)
+    # use the built-in freq_to_note method to convert from a frequency (Hertz)
+    # to a note (Note, Octave)
+    note_to_play = freq_to_note(sensor_data_as_frequency)
 
-    play(new_notes, wait=False, instrument='Marimba')
+    """
+    Step 3: The sensor data has not been converted into notes that the musicpy library can understand. 
+    Adjust the instrument= parameter to be one of the 128x instruments available.
+    """
 
-# b = note('A', 3)
-# play(b, wait=True, instrument='Violin')
+    # play the notes with a selected instrument
+    play(note_to_play, wait=False, instrument='Marimba')

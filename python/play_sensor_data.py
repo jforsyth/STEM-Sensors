@@ -130,6 +130,7 @@
 # }
 
 # include all the relevant libraries
+import math
 from time import time
 from musicpy.musicpy import play, freq_to_note
 import serial
@@ -190,9 +191,10 @@ else:
 # get the start time for the loop
 start_time = time()
 
-# set duration for the loop
-duration = 10
-counter = 0;
+# set duration and increment counter for the loop
+duration = 20
+counter = 0
+
 # run this loop for duration seconds
 while abs(start_time - time()) < duration:
 
@@ -210,16 +212,18 @@ while abs(start_time - time()) < duration:
     temp = float(values[0])
     humidity = float(values[1])
     pressure = float(values[2])
-    uv = float(values[3])
+    uv_index = float(values[3])
     x_accel = float(values[4])
     y_accel = float(values[5])
     z_accel = float(values[6])
+    magnitude = math.sqrt(x_accel * x_accel + y_accel * y_accel + z_accel * z_accel)
+    magnitude = round(magnitude, 2)
 
     if counter % 10 == 0:
-        print("Temp\tHumid\tPressure\tUV\t\tX\t\tY\t\tZ")
+        print("Temp\tHumid\tPressure\tUV\t\tX\t\tY\t\tZ\t\tMag")
 
-    print(str(temp) + "\t" + str(humidity) + "\t" + str(pressure) + "\t\t" + str(uv) + "\t"
-          + str(x_accel) + "\t" + str(y_accel) + "\t" + str(z_accel))
+    print(str(temp) + "\t" + str(humidity) + "\t" + str(pressure) + "\t\t" + str(uv_index) + "\t"
+          + str(x_accel) + "\t" + str(y_accel) + "\t" + str(z_accel) + "\t\t" + str(magnitude))
 
     counter += 1
     """
@@ -234,11 +238,17 @@ while abs(start_time - time()) < duration:
     """
 
     # scale the sensor data to appropriate values
-    accel_data_as_frequency = scale(value=x_accel, input_low=-2, input_high=2, output_low=300, output_high=700)
+    temperature_as_frequency = scale(value=temp, input_low=15, input_high=40, output_low=300, output_high=1000)
+    humidity_as_frequency = scale(value=humidity,input_low=0, input_high=100,output_low=300, output_high=1000)
+    uv_index_as_frequency = scale(value=uv_index, input_low=0, input_high=11, output_low=300, output_high=1000)
+    magnitude_as_frequency = scale(value=magnitude, input_low=1, input_high=4, output_low=300, output_high=1000)
 
     # use the built-in freq_to_note method to convert from a frequency (Hertz)
     # to a note (Note, Octave)
-    accel_notes = freq_to_note(accel_data_as_frequency)
+    temperature_note = freq_to_note(temperature_as_frequency)
+    humidity_notes = freq_to_note(humidity_as_frequency)
+    uv_notes = freq_to_note(uv_index_as_frequency)
+    magnitude_notes = freq_to_note(magnitude_as_frequency)
 
     """
     Step 3: The sensor data has not been converted into notes that the musicpy library can understand. 
@@ -246,4 +256,4 @@ while abs(start_time - time()) < duration:
     """
 
     # play the notes with a selected instrument
-    play(accel_notes, wait=False, instrument='Marimba')
+    play(temperature_note, wait=False, instrument='Acoustic Grand Piano')

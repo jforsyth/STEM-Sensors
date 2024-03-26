@@ -1,3 +1,4 @@
 temp.mid
 venv/
 .idea/
+*.pyc

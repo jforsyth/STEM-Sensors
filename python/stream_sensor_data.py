@@ -6,19 +6,43 @@ import serial
 from serial.tools.list_ports import comports
 
 """
-Step 1: Determine which Serial/USB port is in use. This will vary between Windows, Mac, and Linux systems.
-If the port cannot be found then an error message will appear listing the various ports available. Keep 
-adjusting the variable portName until the correct one is found.
+Scan all the COM/Serial ports to find the correct one...
 """
-portName = '/dev/cu.usbserial-10'
-# portName = 'COM3'
+# this parameter should be updated automatically by the software
+serial_port_name = ''
 
 # do not change this parameter
-baudRate = 57600
+baudRate = 9600
+
+print('Scanning serial ports...')
+ports_list = comports()
+for port_candidate in ports_list:
+    port_name = port_candidate.device
+
+    try:
+        print("Attempting port " + port_name)
+        port = serial.Serial(port_name, baudrate=baudRate, timeout=3)
+
+
+        # print("Attempting read...")
+        line = port.readline()
+
+        if len(line) == 0:
+            # print("Nothing read...")
+            continue
+        else:
+            serial_port_name=port_name
+            print('Using port ', port_name)
+            port.close()
+            break
+    except:
+        # print("Exception occurred.")
+        do_nothing = 0
+
 
 # attempt to open port
 try:
-    ser = serial.Serial(portName, baudRate)
+    ser = serial.Serial(serial_port_name, baudRate)
     print("Opening port " + ser.name)
 
 # if fail, print a helpful message
@@ -40,7 +64,7 @@ else:
 start_time = time()
 
 # set duration and increment counter for the loop
-duration = 200
+duration = 10
 counter = 0
 
 # run this loop for duration seconds
@@ -75,3 +99,4 @@ while abs(start_time - time()) < duration:
 
     counter += 1
 
+ser.close()

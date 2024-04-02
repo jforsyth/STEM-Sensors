@@ -5,66 +5,18 @@ from time import time
 import serial
 from serial.tools.list_ports import comports
 
+from utils import find_serial_port
+
 """
 Scan all the COM/Serial ports to find the correct one...
 """
-# this parameter should be updated automatically by the software
-serial_port_name = ''
-
-# do not change this parameter
-baudRate = 9600
-
-print('Scanning serial ports...')
-ports_list = comports()
-for port_candidate in ports_list:
-    port_name = port_candidate.device
-
-    try:
-        print("Attempting port " + port_name)
-        port = serial.Serial(port_name, baudrate=baudRate, timeout=3)
-
-
-        # print("Attempting read...")
-        line = port.readline()
-
-        if len(line) == 0:
-            # print("Nothing read...")
-            continue
-        else:
-            serial_port_name=port_name
-            print('Using port ', port_name)
-            port.close()
-            break
-    except:
-        # print("Exception occurred.")
-        do_nothing = 0
-
-
-# attempt to open port
-try:
-    ser = serial.Serial(serial_port_name, baudRate)
-    print("Opening port " + ser.name)
-
-# if fail, print a helpful message
-except:
-    print("Couldn't open port. Try changing portName variable to one of the options below:")
-    ports_list = comports()
-    for port_candidate in ports_list:
-        print(port_candidate.device)
-    exit(-1)
-
-if ser.is_open:
-    print("Success!")
-
-else:
-    print("Unable to open port :(")
-    exit(0)
+ser = find_serial_port()
 
 # get the start time for the loop
 start_time = time()
 
 # set duration and increment counter for the loop
-duration = 10
+duration = 120
 counter = 0
 
 # run this loop for duration seconds
@@ -92,7 +44,7 @@ while abs(start_time - time()) < duration:
     magnitude = round(magnitude, 2)
 
     if counter % 10 == 0:
-        print("Temp\tHumid\tPressure\tUV\t\tX\t\tY\t\tZ\t\tMag")
+        print("Temp\tHumid\tAlt\t\tUV\t\tX\t\tY\t\tZ\t\tMag")
 
     print(str(temp) + "\t" + str(humidity) + "\t" + str(pressure) + "\t\t" + str(uv_index) + "\t"
           + str(x_accel) + "\t" + str(y_accel) + "\t" + str(z_accel) + "\t\t" + str(magnitude))

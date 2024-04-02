@@ -46,7 +46,7 @@ while abs(start_time - time()) < duration:
     magnitude = round(magnitude, 2)
 
     if counter % 10 == 0:
-        print("Temp\tHumid\tAlt\t\tUV\t\tX\t\tY\t\tZ\t\tMag")
+        print("Temp\tHumid\tAlt\t\t\tUV\t\tX\t\tY\t\tZ\t\tMag")
 
     print(str(temp) + "\t" + str(humidity) + "\t" + str(pressure) + "\t\t" + str(uv_index) + "\t"
           + str(x_accel) + "\t" + str(y_accel) + "\t" + str(z_accel) + "\t\t" + str(magnitude))
@@ -85,8 +85,12 @@ while abs(start_time - time()) < duration:
     # humidity_notes, uv_notes, or magnitude_notes
     notes_to_play = humidity_notes
 
-    # set this equal to one of the 128 instrument options
-    instrument_to_play = 'Woodblock'
+
+    """
+    Suggested instruments to try are: 'Acoustic Grand Piano', 'Glockenspiel', 'Tremolo Strings'
+    'Brass Section', 'Woodblock', 'Xylophone', 'Timpani'. Or try any of the 128x instruments!
+    """
+    instrument_to_play = 'Timpani'
 
     # play the notes with a selected instrument
     # adjust note to have duration. Set in terms of musical "bars".

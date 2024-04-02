@@ -44,7 +44,7 @@ while abs(start_time - time()) < duration:
     magnitude = round(magnitude, 2)
 
     if counter % 10 == 0:
-        print("Temp\tHumid\tAlt\t\tUV\t\tX\t\tY\t\tZ\t\tMag")
+        print("Temp\tHumid\tAlt\t\t\tUV\t\tX\t\tY\t\tZ\t\tMag")
 
     print(str(temp) + "\t" + str(humidity) + "\t" + str(pressure) + "\t\t" + str(uv_index) + "\t"
           + str(x_accel) + "\t" + str(y_accel) + "\t" + str(z_accel) + "\t\t" + str(magnitude))

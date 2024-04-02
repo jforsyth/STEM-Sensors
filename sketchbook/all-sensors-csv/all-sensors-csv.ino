@@ -129,7 +129,7 @@ void loop() {
   */
   Serial.print(temp); Serial.print(",");
   Serial.print(humidity); Serial.print(",");
-  Serial.print(pressure); Serial.print(",");
+  Serial.print(alt); Serial.print(",");
   Serial.print(UV_Index); Serial.print(",");
   Serial.print(xAccel); Serial.print(",");
   Serial.print(yAccel); Serial.print(",");

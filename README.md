@@ -2,7 +2,7 @@
 Repo for Center for STEM Education and Outreach activity
 
 # Setup Instructions
-From terminal run the followign commands:
+From terminal run the following commands:
 * sudo apt install -y git arduino
 * git clone https://github.com/jforsyth/STEM-Sensors.git
 * cd stem-sensors && sh setup_sketchbook.sh

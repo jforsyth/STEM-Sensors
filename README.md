@@ -5,6 +5,6 @@ Repo for Center for STEM Education and Outreach activity
 From terminal run the following commands:
 * sudo apt install -y git arduino
 * git clone https://github.com/jforsyth/STEM-Sensors.git
-* cd stem-sensors && sh setup_sketchbook.sh
+* cd STEM-Sensors && sh setup_sketchbook.sh
 
 Run Arduino and attempt to upload programs from sketchbook
